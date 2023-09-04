@@ -27,16 +27,16 @@ architecture tb of controle_servo_tb is
       clock     : in  std_logic;
       reset     : in  std_logic;
       posicao   : in  std_logic_vector(1 downto 0);
-      sinal_pwm : out std_logic
+      controle : out std_logic
     );
   end component;
   
   -- Declaração de sinais para conectar o componente a ser testado (DUT)
   --   valores iniciais para fins de simulacao (GHDL ou ModelSim)
-  signal clock_in      : std_logic := '0';
-  signal reset_in      : std_logic := '0';
-  signal posicao_in    : std_logic_vector (1 downto 0) := "00";
-  signal sinal_pwm_out : std_logic := '0';
+  signal clock_in     : std_logic := '0';
+  signal reset_in     : std_logic := '0';
+  signal posicao_in   : std_logic_vector (1 downto 0) := "00";
+  signal controle_out : std_logic := '0';
 
 
   -- Configurações do clock
@@ -52,10 +52,10 @@ begin
  
   -- Conecta DUT (Device Under Test)
   dut: controle_servo port map( 
-         clock     => clock_in,
-         reset     => reset_in,
-         posicao   => posicao_in,
-         sinal_pwm => sinal_pwm_out
+         clock    => clock_in,
+         reset    => reset_in,
+         posicao  => posicao_in,
+         controle => controle_out
       );
 
   -- geracao dos sinais de entrada (estimulos)
