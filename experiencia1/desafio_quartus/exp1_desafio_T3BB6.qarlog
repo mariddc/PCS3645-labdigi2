@@ -1,0 +1,16 @@
+Quartus Prime Archive log --	/var/home/hfreire/labdig/experiencia1/arquivos_vhdl/exp1_desafio_T3BB6.qarlog
+
+Archive:	/var/home/hfreire/labdig/experiencia1/arquivos_vhdl/exp1_desafio_T3BB6.qar
+Date:		Tue Sep  5 17:53:19 2023
+Quartus Prime		20.1.1 Build 720 11/11/2020 SJ Lite Edition
+
+	=========== Files Selected: ===========
+/home/hfreire/.intelFPGA/20.1/quartus/linux64/assignment_defaults.qdf
+/var/home/hfreire/labdig/experiencia1/arquivos_vhdl/circuito_pwm.vhd
+/var/home/hfreire/labdig/experiencia1/arquivos_vhdl/controle_servo_desafio.vhd
+/var/home/hfreire/labdig/experiencia1/arquivos_vhdl/exp1_desafio_T3BB6.qpf
+/var/home/hfreire/labdig/experiencia1/arquivos_vhdl/exp1_desafio_T3BB6.qsf
+	======= Total: 5 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.
