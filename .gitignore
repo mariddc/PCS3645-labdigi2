@@ -1,21 +1,21 @@
 # Quartus
-.qarlog
-.qsf
-.qws
-.rpt
+*.qarlog
+*.qsf
+*.qws
+*.rpt
 
 db/
 incremental_db/
 output_files/
 
 # GHDL 
-.cf
-.vcd
-.out
+*.cf
+*.vcd
+*.out
 
 # ModelSim
-.vo
-.tcl
+*.vo
+*.tcl
 
 # generic
-.txt
+*.txt
