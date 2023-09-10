@@ -4,6 +4,8 @@
 *.qws
 *.rpt
 
+*_restored/
+
 db/
 incremental_db/
 output_files/
@@ -16,6 +18,11 @@ output_files/
 # ModelSim
 *.vo
 *.tcl
+*.mti
+*.wlf
+
+work/
 
 # generic
+transcript
 *.txt
