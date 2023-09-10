@@ -27,6 +27,7 @@ entity rx_serial_7O1_fd is
         sample_tick  : in  std_logic;
         dado_serial  : in  std_logic;
         desloca      : in  std_logic;
+        pronto       : in  std_logic;
         fim          : out std_logic;
         bit_tick     : out std_logic;
         paridade     : out std_logic;
@@ -66,7 +67,7 @@ architecture rx_serial_7O1_fd_arch of rx_serial_7O1_fd is
     );
     end component;
     
-    signal s_fim, count_bit, s_bit_pulse, s_bit_tick, ss_bit_tick : std_logic;
+    signal s_fim, count_bit, s_bit_pulse, s_bit_tick : std_logic;
     signal s_dado : std_logic_vector(8 downto 0);
 
     -- inicialização do sinal de saída
@@ -128,12 +129,12 @@ begin
     paridade <= s_paridade;
     dado_deserializado <= s_deserializado;
 
-    DESERIALIZAED_R: process (clock, s_fim, s_dado) is
+    DESERIALIZAED_R: process (clock, pronto, s_dado) is
     begin
       if (reset_r='1') then
         s_paridade <= '0';
         s_deserializado <= (others => '0');
-      elsif (rising_edge(clock) and s_fim='1') then
+      elsif (rising_edge(clock) and pronto='1') then
         s_paridade <= s_dado(7);
         s_deserializado <= s_dado(6 downto 0);
       end if;

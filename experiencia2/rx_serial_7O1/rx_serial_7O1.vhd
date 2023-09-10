@@ -64,6 +64,7 @@ architecture rx_serial_7O1_arch of rx_serial_7O1 is
         sample_tick  : in  std_logic;
         dado_serial  : in  std_logic;
         desloca      : in  std_logic;
+        pronto       : in  std_logic;
         fim          : out std_logic;
         bit_tick     : out std_logic;
         paridade     : out std_logic;
@@ -104,7 +105,8 @@ architecture rx_serial_7O1_arch of rx_serial_7O1 is
   constant sampling_rate : natural := 434 / samples; -- [16 (oversampling) * 115200 bauds]
   constant samples_width : natural := natural(ceil(log2(real(sampling_rate))));
 
-  signal s_reset_c, s_reset_r, s_conta, s_desloca, s_fim, s_sample, s_tick : std_logic;
+  signal s_reset_c, s_reset_r, s_conta, s_desloca : std_logic;
+  signal s_fim, s_sample, s_tick, s_pronto : std_logic;
 
   signal s_display, s_estado : std_logic_vector(3 downto 0);
   signal s_dado_recebido : std_logic_vector(6 downto 0);
@@ -112,12 +114,13 @@ architecture rx_serial_7O1_arch of rx_serial_7O1 is
 begin
 
   s_display <= '0' & s_dado_recebido(6 downto 4);
+  pronto_rx <= s_pronto;
 
   DF: rx_serial_7O1_fd
       generic map (samples, samples_width)
       port map (
         clock => clock, reset => reset, reset_c => s_reset_c, reset_r => s_reset_r, conta => s_conta,
-        sample_tick => s_sample, dado_serial => dado_serial, desloca => s_desloca, fim => s_fim,
+        sample_tick => s_sample, dado_serial => dado_serial, desloca => s_desloca, fim => s_fim, pronto => s_pronto,
         bit_tick => s_tick, paridade => paridade_recebida, dado_deserializado => s_dado_recebido
       );
 
@@ -125,7 +128,7 @@ begin
       port map (
         clock => clock, reset => reset, dado => dado_serial, bit_tick => s_tick, sample_tick => s_sample,
         fim => s_fim, reset_c => s_reset_c, reset_r => s_reset_r, conta => s_conta, desloca => s_desloca,
-        pronto => pronto_rx, db_estado => s_estado
+        pronto => s_pronto, db_estado => s_estado
       ); 
 
   SAMPLER: contador_m

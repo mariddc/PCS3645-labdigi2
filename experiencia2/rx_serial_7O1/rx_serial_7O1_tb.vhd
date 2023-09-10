@@ -25,14 +25,12 @@ end entity;
 
 architecture tb of rx_serial_tb is
   
-  -- Declara��o de sinais para conectar o componente a ser testado (DUT)
+  -- Declaração de sinais para conectar o componente a ser testado (DUT)
   signal clock_in              : std_logic  := '0';
   signal reset_in              : std_logic  := '0';
   -- saidas
   signal pronto_out            : std_logic  := '0';
   signal paridade_recebida_out : std_logic  := '0';
-  --signal temdado_out           : std_logic  := '0';
-  --signal paridade_ok_out       : std_logic  := '0';
   signal dado_recebido0_out    : std_logic_vector(6 downto 0) := "0000000";
   signal dado_recebido1_out    : std_logic_vector(6 downto 0) := "0000000";
   signal db_estado_out         : std_logic_vector(6 downto 0) := "0000000";
@@ -84,7 +82,7 @@ architecture tb of rx_serial_tb is
         (1, "10111001"), -- ASCII 9 (dado=0x39 + paridade=1)
         (2, "01101011"), -- ASCII k (dado=0x6B + paridade=0)
         (3, "01000000"), -- ASCII @ (dado=0x40 + paridade=0)
-        (4, "01111111")  -- ASCII DEL (dado=0x127 + paridade=0)
+        (4, "01111111")  -- ASCII DEL (dado=0x7F + paridade=0)
       );
   signal caso : natural;
 
@@ -105,8 +103,6 @@ begin
            dado_serial       => entrada_serial_in,
            paridade_recebida => paridade_recebida_out,
            pronto_rx         => pronto_out,
-           --tem_dado          => temdado_out,
-           --paridade_ok       => paridade_ok_out,
            dado_recebido0    => dado_recebido0_out,
            dado_recebido1    => dado_recebido1_out,
            db_estado         => db_estado_out
