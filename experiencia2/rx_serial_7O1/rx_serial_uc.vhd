@@ -60,8 +60,8 @@ begin
                            else                 Eprox <= preparacao;
                            end if;
 
-      when recepcao   =>   if    fim='1'      then Eprox <= final;
-                           else                    Eprox <= recepcao;
+      when recepcao   =>   if    fim='1' then Eprox <= final;
+                           else               Eprox <= recepcao;
                            end if;
 
       when final      =>   Eprox <= idle;
