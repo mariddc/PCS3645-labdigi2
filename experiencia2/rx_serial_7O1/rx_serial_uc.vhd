@@ -33,7 +33,7 @@ end entity;
 
 architecture rx_serial_uc_arch of rx_serial_uc is
 
-    type tipo_estado is (idle, preparacao, espera, recepcao, final);
+    type tipo_estado is (idle, preparacao, recepcao, final);
     signal Eatual, Eprox : tipo_estado;
 
 begin
@@ -56,16 +56,13 @@ begin
                            else                                 Eprox <= idle;
                            end if;
 
-      when preparacao =>   if bit_tick='1' then Eprox <= espera;
+      when preparacao =>   if bit_tick='1' then Eprox <= recepcao;
                            else                 Eprox <= preparacao;
                            end if;
 
-      when espera     =>   if    fim='1'      then Eprox <= final;
-                           elsif bit_tick='1' then Eprox <= recepcao;
-                           else                    Eprox <= espera;
+      when recepcao   =>   if    fim='1'      then Eprox <= final;
+                           else                    Eprox <= recepcao;
                            end if;
-
-      when recepcao   =>   Eprox <= espera;
 
       when final      =>   Eprox <= idle;
 
@@ -86,7 +83,7 @@ begin
       desloca <= '1' when recepcao, '0' when others;
 
   with Eatual select
-      conta <= '1' when espera, '0' when others;
+      conta <= '1' when recepcao, '0' when others;
 
   with Eatual select
       pronto <= '1' when final, '0' when others;
@@ -94,8 +91,7 @@ begin
   with Eatual select
       db_estado <= "0000" when idle,
                    "0001" when preparacao, 
-                   "0010" when espera,
-                   "0100" when recepcao, 
+                   "0010" when recepcao, 
                    "1111" when final,    -- Final
                    "1110" when others;   -- Erro
 

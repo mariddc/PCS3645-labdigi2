@@ -67,7 +67,7 @@ architecture rx_serial_7O1_fd_arch of rx_serial_7O1_fd is
     );
     end component;
     
-    signal s_fim, count_bit, s_bit_pulse, s_bit_tick : std_logic;
+    signal s_fim, count_bit, s_bit_pulse, s_bit_tick, s_desloca : std_logic;
     signal s_dado : std_logic_vector(8 downto 0);
 
     -- inicialização do sinal de saída
@@ -84,7 +84,7 @@ begin
             clock          => clock, 
             reset          => reset, 
             carrega        => '0', 
-            desloca        => desloca,
+            desloca        => s_desloca,
             entrada_serial => dado_serial,
             dados          => (others => '0'),
             saida          => s_dado
@@ -120,14 +120,16 @@ begin
 
     ED: entity work.edge_detector(behavioral)
         port map (clock => clock, signal_in => s_bit_pulse, output => s_bit_tick);
-
-    fim <= s_fim;
     
+    s_desloca <= desloca and s_bit_tick;
     count_bit <= conta and s_bit_tick;
+
     bit_tick <= s_bit_tick;
 
     paridade <= s_paridade;
     dado_deserializado <= s_deserializado;
+
+    fim <= s_fim;
 
     DESERIALIZAED_R: process (clock, pronto, s_dado) is
     begin
