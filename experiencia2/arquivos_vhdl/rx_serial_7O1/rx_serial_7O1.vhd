@@ -26,6 +26,7 @@ entity rx_serial_7O1 is
       dado_recebido1    : out std_logic_vector(6 downto 0);
       paridade_recebida : out std_logic;
       pronto_rx         : out std_logic;
+      db_dado_serial    : out std_logic;
       db_estado         : out std_logic_vector(6 downto 0)
   );
 begin
@@ -115,6 +116,8 @@ begin
 
   s_display <= '0' & s_dado_recebido(6 downto 4);
   pronto_rx <= s_pronto;
+
+  db_dado_serial <= dado_serial;
 
   DF: rx_serial_7O1_fd
       generic map (samples, samples_width)
