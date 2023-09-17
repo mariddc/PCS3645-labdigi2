@@ -13,3 +13,8 @@ digital para controle de sua posição.
 O objetivo desta experiência é realizar o projeto e a implementação de um circuito digital em VHDL que recebe dados digitais 
 (caracteres em código ASCII) originados de um terminal serial utilizando a norma EIA-RS-232C e a configuração de comunicação 
 serial 7O1.
+
+-----
+### Experiência 3: Interface com Sensor Ultrassônico de Distância
+Esta experiência tem por objetivo desenvolver um circuito que realiza a interface com o sensor ultrassônico de distância 
+HC-SR04. A implementação e testes serão desenvolvidas para a placa de desenvolvimento FPGA DE0-CV. 
