@@ -32,7 +32,8 @@ architecture tb of interface_hcsr04_tb is
         trigger   : out std_logic;
         medida    : out std_logic_vector(11 downto 0);
         pronto    : out std_logic;
-        db_estado : out std_logic_vector(3 downto 0)
+        db_estado : out std_logic_vector(3 downto 0);
+        db_tick   : out std_logic
     );
   end component;
   
@@ -46,6 +47,7 @@ architecture tb of interface_hcsr04_tb is
   signal medida_out    : std_logic_vector (11 downto 0) := x"000";
   signal pronto_out    : std_logic := '0';
   signal db_estado_out : std_logic_vector (3 downto 0)  := "0000";
+  signal db_tick_out   : std_logic := '0';
 
   -- Configurações do clock
   constant clockPeriod   : time      := 20 ns; -- clock de 50MHz
@@ -62,8 +64,10 @@ architecture tb of interface_hcsr04_tb is
       (
         (1, 5882),  -- 5882us (100cm)
         (2, 5899),  -- 5899us (100,29cm) truncar para 100cm
-        (3, 4353),  -- 4353us (74cm)
-        (4, 4399)   -- 4399us (74,79cm)  arredondar para 75cm
+        (3, 4399),  -- 4399us (74,79cm)  arredondar para 75cm
+        (4,   42),  --   42us ( 0,71cm)  arredondar pra 1cm
+        (5, 59408), -- 59408us (1009,98cm) overflow do contador bcd
+        (6, 28242) -- 28242us (480,14cm) arredondar pra 480cm
         -- inserir aqui outros casos de teste (inserir "," na linha anterior)
       );
 
@@ -85,7 +89,8 @@ begin
            medida    => medida_out,
            trigger   => trigger_out,
            pronto    => pronto_out,
-           db_estado => db_estado_out
+           db_estado => db_estado_out,
+           db_tick   => db_tick_out
        );
 
   -- geracao dos sinais de entrada (estimulos)
