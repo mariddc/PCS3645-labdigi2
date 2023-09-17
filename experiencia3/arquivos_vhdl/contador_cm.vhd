@@ -28,13 +28,18 @@ entity contador_cm is
         clock   : in  std_logic;
         reset   : in  std_logic;
         pulso   : in  std_logic;
+        --conta_tick: in std_logic;
+        --zera_tick : in std_logic;
+        --conta_bcd : in std_logic;
+        --zera_bcd  : in std_logic;
         digito0 : out std_logic_vector(3 downto 0);
         digito1 : out std_logic_vector(3 downto 0);
         digito2 : out std_logic_vector(3 downto 0);
         fim     : out std_logic;
-        pronto  : out std_logic
+        pronto  : out std_logic;
+        db_tick : out std_logic
     );
-end entity interface_hcsr04;
+end entity contador_cm;
 
 architecture estrutural of contador_cm is
     
@@ -65,31 +70,57 @@ architecture estrutural of contador_cm is
         );
     end component;
 
+    component edge_detector
+        port (  
+            clock     : in  std_logic;
+            signal_in : in  std_logic;
+            output    : out std_logic
+        );
+    end component;
+
+    signal s_pulso_negado, s_tick : std_logic;
+
+    -- saidas
+    signal s_fim_pulso : std_logic;
+
 begin
+
+    s_pulso_negado <= not pulso;
+
     BCD: contador_bcd_3digitos
         port map (
             clock   => clock, 
             zera    => reset,
-            conta   => pulso,
+            conta   => s_tick,
             digito0 => digito0,
             digito1 => digito1,
             digito2 => digito2,
             fim     => fim
-        )
+        );
 
-    M: contador_m 
+    M: contador_m -- ticks a cada 1 cm
         generic map (
             M => 2941,
             N => 12
         )
         port map (
             clock => clock,
-            zera  => 
-            conta => 
+            zera  => reset,
+            conta => pulso,
             Q     => open,
             fim   => open,
-            meio  => tick
-        )
+            meio  => s_tick
+        );
+
+    ED: edge_detector
+        port map (
+            clock       => clock,
+            signal_in   => s_pulso_negado,
+            output      => s_fim_pulso
+        );
+
+    pronto  <= s_fim_pulso;
+    db_tick <= s_tick;
 
 end architecture estrutural;
    

@@ -24,9 +24,13 @@ entity interface_hcsr04_fd is
         pulso     : in std_logic;
         registra  : in std_logic;
         zera      : in std_logic;
+        --mede      : in std_logic;
+        pronto    : in std_logic;
         trigger   : out std_logic;
         fim_medida: out std_logic;
-        distancia : out std_logic_vector(11 downto 0) -- 3 digitos BCD
+        --fim       : out std_logic;  
+        distancia : out std_logic_vector(11 downto 0); -- 3 digitos BCD
+        db_tick   : out std_logic
     );
 end entity interface_hcsr04_fd;
 
@@ -41,25 +45,30 @@ architecture fd_arch of interface_hcsr04_fd is
             clock   : in  std_logic;
             reset   : in  std_logic;
             pulso   : in  std_logic;
+            --conta_tick : in std_logic;
+            --zera_tick  : in std_logic;
+            --conta_bcd  : in std_logic;
+            --zera_bcd   : in std_logic;
             digito0 : out std_logic_vector(3 downto 0);
             digito1 : out std_logic_vector(3 downto 0);
             digito2 : out std_logic_vector(3 downto 0);
             fim     : out std_logic;
-            pronto  : out std_logic
+            pronto  : out std_logic;
+            db_tick : out std_logic
         );
     end component;
 
     component registrador_n
         generic (
             constant N: integer
-        )
+        );
         port (
             clock   : in std_logic;
             clear   : in std_logic;
             enable  : in std_logic;
-            D       : in std_logic_vector(size-1 downto 0);
-            Q       : out std_logic_vector(size-1 downto 0)
-        )
+            D       : in std_logic_vector(N-1 downto 0);
+            Q       : out std_logic_vector(N-1 downto 0)
+        );
     end component;
 
     component gerador_pulso
@@ -77,40 +86,53 @@ architecture fd_arch of interface_hcsr04_fd is
     end component;
 
     -- sinais
+    --signal s_zera_tick, s_zera_bcd, s_conta_bcd: std_logic;
+    signal s_tick : std_logic;
     signal s_digito0, s_digito1, s_digito2 : std_logic_vector(3 downto 0);
     signal s_distancia_in : std_logic_vector(11 downto 0);
 
 
     -- saidas
-    signal s_fim, s_fim_medida, s_trigger : std_logic;
+    signal s_fim_medida, s_trigger : std_logic;
     signal s_distancia_out : std_logic_vector(11 downto 0);
 
 begin
     -- concatena
     s_distancia_in <= s_digito2 & s_digito1 & s_digito0;
 
-    faz_medida: contador_cm
+    -- zera os contadores no inicio e fim de sua operação
+    --s_zera_tick <= zera or registra; -- preparação ou armazenamento
+    --s_zera_bcd  <= zera or pronto;   -- preparacao ou final
+
+    -- conta no estado de medida a cada tick
+    --s_conta_bcd <= mede and s_tick;
+
+    CCM: contador_cm
         generic map (
             R => 2941,
-            N => 12,
+            N => 12
         )
         port map (
             clock   => clock,
             reset   => zera,
             pulso   => pulso,
+            --conta_tick => mede,
+            --zera_tick  => s_zera_tick,
+            --conta_bcd  => s_conta_bcd,
+            --zera_bcd   => s_zera_bcd,
             digito0 => s_digito0,
             digito1 => s_digito1,
             digito2 => s_digito2,
-            fim     => s_fim,
-            pronto  => s_fim_medida
-
+            fim     => open,
+            pronto  => s_fim_medida,
+            db_tick => s_tick 
         );
-
+ 
     REG: registrador_n 
         generic map (
-            constant N => 12
+            N => 12
         )
-        port (
+        port map (
             clock   => clock,
             clear   => zera, 
             enable  => registra,
@@ -126,16 +148,18 @@ begin
             clock  => clock,
             reset  => zera,
             gera   => gera,
-            para   => 0,
+            para   => '0',
             pulso  => s_trigger,
             pronto => open
         );
 
             
-    fim         <= s_fim;
+    
+    --fim         <= s_fim;
     fim_medida  <= s_fim_medida;
     trigger     <= s_trigger;
     distancia   <= s_distancia_out;
+    db_tick     <= s_tick;
 
 end architecture fd_arch;
    

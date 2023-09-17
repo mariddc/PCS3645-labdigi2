@@ -26,7 +26,9 @@ entity interface_hcsr04 is
         trigger   : out std_logic;
         medida    : out std_logic_vector(11 downto 0); -- 3 digitos BCD
         pronto    : out std_logic;
-        db_estado : out std_logic_vector(3 downto 0) -- estado da UC
+        db_estado : out std_logic_vector(3 downto 0); -- estado da UC
+        --db_fim    : out std_logic;
+        db_tick   : out std_logic
     );
 end entity interface_hcsr04;
 
@@ -35,13 +37,17 @@ architecture estrutural of interface_hcsr04 is
     component interface_hcsr04_fd is
         port (
             clock     : in std_logic;
-            zera      : in std_logic;
+            gera      : in std_logic;
             pulso     : in std_logic;
             registra  : in std_logic;
             zera      : in std_logic;
+            --mede      : in std_logic;
+            pronto    : in std_logic;
             trigger   : out std_logic;
             fim_medida: out std_logic;
-            distancia : out std_logic_vector(11 downto 0) -- 3 digitos BCD
+            --fim       : out std_logic;
+            distancia : out std_logic_vector(11 downto 0); -- 3 digitos BCD
+            db_tick   : out std_logic
         );
     end component;
 
@@ -54,6 +60,7 @@ architecture estrutural of interface_hcsr04 is
             fim_medida : in  std_logic;
             zera       : out std_logic;
             gera       : out std_logic;
+            --mede       : out std_logic;
             registra   : out std_logic;
             pronto     : out std_logic;
             db_estado  : out std_logic_vector(3 downto 0) 
@@ -61,10 +68,11 @@ architecture estrutural of interface_hcsr04 is
     end component;
 
     -- sinais de controle
-    signal s_gera, s_registra, s_zera, s_fim_medida : std_logic;
+    signal s_gera, s_registra, s_zera, s_fim_medida: std_logic;
+    -- signal s_mede, s_fim : std_logic;
 
     -- saidas do circuito
-    signal s_trigger, s_pronto : std_logic;    
+    signal s_trigger, s_pronto, s_tick : std_logic;    
     signal s_estado : std_logic_vector(3 downto 0);
     signal s_medida : std_logic_vector(11 downto 0);
 
@@ -78,12 +86,16 @@ begin
             pulso       => echo,
             registra    => s_registra,
             zera        => s_zera,
+            --mede        => s_mede,
+            pronto      => s_pronto,
             trigger     => s_trigger,
             fim_medida  => s_fim_medida,
-            distancia   => s_medida 
+            --fim         => s_fim,
+            distancia   => s_medida,
+            db_tick     => s_tick
         );
 
-    UC: interface_hcsr04_uc is
+    UC: interface_hcsr04_uc
         port map (
             clock       => clock,
             reset       => reset,
@@ -92,6 +104,7 @@ begin
             fim_medida  => s_fim_medida,
             zera        => s_zera,
             gera        => s_gera,
+            --mede        => s_mede,
             registra    => s_registra,
             pronto      => s_pronto,
             db_estado   => s_estado
@@ -100,8 +113,12 @@ begin
         -- saidas do circuito
         trigger     <= s_trigger;
         pronto      <= s_pronto;
-        db_estado   <= s_estado;
         medida      <= s_medida;
+
+        -- depuracao
+        db_estado   <= s_estado;
+        --db_fim      <= s_fim;
+        db_tick     <= s_tick;
 
 end architecture estrutural;
    
