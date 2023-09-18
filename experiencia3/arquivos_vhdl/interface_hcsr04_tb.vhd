@@ -62,16 +62,19 @@ architecture tb of interface_hcsr04_tb is
   type casos_teste_array is array (natural range <>) of caso_teste_type;
   constant casos_teste : casos_teste_array :=
       (
-        (1, 5882),  -- 5882us (100cm)
-        (2, 5899),  -- 5899us (100,29cm) truncar para 100cm
-        (3, 4399),  -- 4399us (74,79cm)  arredondar para 75cm
-        (4,   42),  --   42us ( 0,71cm)  arredondar pra 1cm
-        (5, 59408), -- 59408us (1009,98cm) overflow do contador bcd
-        (6, 28242) -- 28242us (480,14cm) arredondar pra 480cm
+        (1, 1789),    -- 1789us (30,41cm) truncar para 30cm
+        (2, 3575),    -- 3575us (60,78cm) truncar para 61cm
+        (3, 5882),    -- 5882us (100cm)
+        (4,   42)    --   42us ( 0,71cm)  arredondar pra 1cm
+        --(2, 5899),  -- 5899us (100,29cm) truncar para 100cm
+        --(3, 4399),  -- 4399us (74,79cm)  arredondar para 75cm
+        --(5, 59408), -- 59408us (1009,98cm) overflow do contador bcd
+        --(6, 28242)  -- 28242us (480,14cm) arredondar pra 480cm
         -- inserir aqui outros casos de teste (inserir "," na linha anterior)
       );
 
   signal larguraPulso: time := 1 ns;
+  signal caso : natural;
 
 begin
   -- Gerador de clock: executa enquanto 'keep_simulating = 1', com o período
@@ -116,6 +119,7 @@ begin
 
     ---- loop pelos casos de teste
     for i in casos_teste'range loop
+        caso <= casos_teste(i).id;
         -- 1) determina largura do pulso echo
         assert false report "Caso de teste " & integer'image(casos_teste(i).id) & ": " &
             integer'image(casos_teste(i).tempo) & "us" severity note;
@@ -140,7 +144,7 @@ begin
         assert false report "Fim do caso " & integer'image(casos_teste(i).id) severity note;
      
         -- 6) espera entre casos de tese
-        wait for 100 us;
+        wait for 400 us;
 
     end loop;
 
