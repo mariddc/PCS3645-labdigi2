@@ -49,7 +49,6 @@ architecture exp3_sensor_arch of exp3_sensor is
             medida    : out std_logic_vector(11 downto 0); -- 3 digitos BCD
             pronto    : out std_logic;
             db_estado : out std_logic_vector(3 downto 0); -- estado da UC
-            --db_fim    : out std_logic;
             db_tick   : out std_logic
         );
     end component;

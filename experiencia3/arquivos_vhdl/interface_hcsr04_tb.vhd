@@ -66,11 +66,6 @@ architecture tb of interface_hcsr04_tb is
         (2, 3575),    -- 3575us (60,78cm) truncar para 61cm
         (3, 5882),    -- 5882us (100cm)
         (4,   42)    --   42us ( 0,71cm)  arredondar pra 1cm
-        --(2, 5899),  -- 5899us (100,29cm) truncar para 100cm
-        --(3, 4399),  -- 4399us (74,79cm)  arredondar para 75cm
-        --(5, 59408), -- 59408us (1009,98cm) overflow do contador bcd
-        --(6, 28242)  -- 28242us (480,14cm) arredondar pra 480cm
-        -- inserir aqui outros casos de teste (inserir "," na linha anterior)
       );
 
   signal larguraPulso: time := 1 ns;

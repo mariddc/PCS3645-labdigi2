@@ -28,10 +28,6 @@ entity contador_cm is
         clock   : in  std_logic;
         reset   : in  std_logic;
         pulso   : in  std_logic;
-        --conta_tick: in std_logic;
-        --zera_tick : in std_logic;
-        --conta_bcd : in std_logic;
-        --zera_bcd  : in std_logic;
         digito0 : out std_logic_vector(3 downto 0);
         digito1 : out std_logic_vector(3 downto 0);
         digito2 : out std_logic_vector(3 downto 0);

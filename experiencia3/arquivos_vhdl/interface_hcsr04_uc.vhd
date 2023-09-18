@@ -26,7 +26,6 @@ entity interface_hcsr04_uc is
         fim_medida : in  std_logic;
         zera       : out std_logic;
         gera       : out std_logic;
-        --mede       : out std_logic;
         registra   : out std_logic;
         pronto     : out std_logic;
         db_estado  : out std_logic_vector(3 downto 0) 
@@ -72,12 +71,9 @@ begin
 
   -- saidas de controle
   with Eatual select 
---      zera <= '1' when inicial | preparacao, '0' when others;
       zera <= '1' when preparacao, '0' when others;
   with Eatual select
       gera <= '1' when envia_trigger, '0' when others;
-  --with Eatual select
-      --mede <= '1' when medida, '0' when others;
   with Eatual select
       registra <= '1' when armazenamento, '0' when others;
   with Eatual select
