@@ -19,12 +19,13 @@ use IEEE.std_logic_1164.all;
 
 entity interface_hcsr04_fd is
     port (
-        clock     : in std_logic;
-        gera      : in std_logic;
-        pulso     : in std_logic;
-        registra  : in std_logic;
-        zera      : in std_logic;
-        pronto    : in std_logic;
+        clock     : in  std_logic;
+        reset     : in  std_logic;
+        gera      : in  std_logic;
+        pulso     : in  std_logic;
+        registra  : in  std_logic;
+        zera      : in  std_logic;
+        pronto    : in  std_logic;
         trigger   : out std_logic;
         fim_medida: out std_logic;
         distancia : out std_logic_vector(11 downto 0); -- 3 digitos BCD
@@ -80,9 +81,9 @@ architecture fd_arch of interface_hcsr04_fd is
     end component;
 
     -- sinais
-    signal s_tick : std_logic;
-    signal s_digito0, s_digito1, s_digito2 : std_logic_vector(3 downto 0);
+    signal s_tick, s_zera : std_logic;
     signal s_distancia_in : std_logic_vector(11 downto 0);
+    signal s_digito0, s_digito1, s_digito2 : std_logic_vector(3 downto 0);
 
 
     -- saidas
@@ -92,6 +93,8 @@ architecture fd_arch of interface_hcsr04_fd is
 begin
     -- concatena
     s_distancia_in <= s_digito2 & s_digito1 & s_digito0;
+
+    s_zera <= zera or reset;
 
     CCM: contador_cm
         generic map (
@@ -116,7 +119,7 @@ begin
         )
         port map (
             clock   => clock,
-            clear   => zera, 
+            clear   => s_zera, 
             enable  => registra,
             D       => s_distancia_in,
             Q       => s_distancia_out

@@ -77,6 +77,7 @@ begin
     FD: interface_hcsr04_fd 
         port map (
             clock       => clock,
+            reset       => reset,
             gera        => s_gera,
             pulso       => echo,
             registra    => s_registra,
