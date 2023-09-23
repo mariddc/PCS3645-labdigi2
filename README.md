@@ -18,3 +18,9 @@ serial 7O1.
 ### Experiência 3: Interface com Sensor Ultrassônico de Distância
 Esta experiência tem por objetivo desenvolver um circuito que realiza a interface com o sensor ultrassônico de distância 
 HC-SR04. A implementação e testes serão desenvolvidas para a placa de desenvolvimento FPGA DE0-CV. 
+
+-----
+### Experiência 4: Trena Digital com Saída Serial
+Esta experiência tem por objetivo desenvolver uma Trena Digital, ou seja, um circuito digital que realiza a medida de 
+distância para um objeto, usando um sensor ultrassônico de distância HC-SR04, com saída das medidas em uma porta de 
+comunicação serial. 
