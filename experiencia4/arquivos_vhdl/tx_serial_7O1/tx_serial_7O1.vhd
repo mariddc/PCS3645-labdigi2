@@ -20,12 +20,12 @@ use ieee.numeric_std.all;
 
 entity tx_serial_7O1 is
     port (
-        clock           : in  std_logic;
-        reset           : in  std_logic;
-        partida         : in  std_logic;
-        dados_ascii     : in  std_logic_vector(6 downto 0);
-        dado_serial     : out std_logic;
-        pronto          : out std_logic
+        clock       : in  std_logic;
+        reset       : in  std_logic;
+        partida     : in  std_logic;
+        dados_ascii : in  std_logic_vector(6 downto 0);
+        dado_serial : out std_logic;
+        pronto      : out std_logic
     );
 end entity;
 
@@ -76,7 +76,15 @@ architecture tx_serial_7O1_arch of tx_serial_7O1 is
         );
     end component;
 
-    signal s_zera, s_conta, s_carrega, s_desloca, s_tick, s_fim : std_logic;
+    component edge_detector is
+        port (  
+            clock     : in  std_logic;
+            signal_in : in  std_logic;
+            output    : out std_logic
+        );
+    end component;
+
+    signal s_zera, s_conta, s_partida, s_carrega, s_desloca, s_tick, s_fim : std_logic;
 
 begin
 
@@ -85,7 +93,7 @@ begin
            port map (
                clock     => clock, 
                reset     => reset, 
-               partida   => partida, 
+               partida   => s_partida, 
                tick      => s_tick, 
                fim       => s_fim,
                zera      => s_zera, 
@@ -124,5 +132,12 @@ begin
                  fim   => s_tick, 
                  meio  => open
              );
+
+    U4_ED: edge_detector
+           port map (
+                clock     => clock,
+                signal_in => partida,
+                output    => s_partida
+           ); 
  
 end architecture;

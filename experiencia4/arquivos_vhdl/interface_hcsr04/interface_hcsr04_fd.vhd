@@ -25,7 +25,6 @@ entity interface_hcsr04_fd is
         pulso     : in  std_logic;
         registra  : in  std_logic;
         zera      : in  std_logic;
-        pronto    : in  std_logic;
         trigger   : out std_logic;
         fim_medida: out std_logic;
         distancia : out std_logic_vector(11 downto 0); -- 3 digitos BCD
