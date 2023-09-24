@@ -68,7 +68,7 @@ begin
       when proximo     =>  if dado_enviado='1' then Eprox <= final;
                            else                     Eprox <= transmissao;
                            end if;
-      -- implicito: when final => Eprox <= inicial;
+      when final       =>  Eprox <= inicial;
       when others      =>  Eprox <= inicial;
 
     end case;

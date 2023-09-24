@@ -135,19 +135,7 @@ begin
             mux_out => s_digit
         );
 
-    -- ASCII 0 a 9 (0x30 a 0x39)
-    U5_ENCODER: with s_digit select
-        s_ascii_char <= "0110000" when "0000",
-                        "0110001" when "0001",
-                        "0110010" when "0010",
-                        "0110011" when "0011",
-                        "0110100" when "0100",
-                        "0110101" when "0101",
-                        "0110110" when "0110",
-                        "0110111" when "0111",
-                        "0111000" when "1000",
-                        "0111001" when "1001",
-                        "0100011" when others; -- ASCII '#' (0x23)
+    s_ascii_char <= "011" & s_digit when s_digit <= "1001" else "0100011";
 
     db_medida <= s_medida;
 
