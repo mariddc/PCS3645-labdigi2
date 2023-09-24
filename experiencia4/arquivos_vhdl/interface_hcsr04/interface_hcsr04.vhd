@@ -25,7 +25,7 @@ entity interface_hcsr04 is
         echo      : in  std_logic;
         trigger   : out std_logic;
         medida    : out std_logic_vector(11 downto 0); -- 3 digitos BCD
-        pronto    : out std_logic;
+        pronto    : out std_logic
     );
 end entity interface_hcsr04;
 
@@ -34,6 +34,7 @@ architecture estrutural of interface_hcsr04 is
     component interface_hcsr04_fd is
         port (
             clock     : in  std_logic;
+            reset     : in  std_logic;
             gera      : in  std_logic;
             pulso     : in  std_logic;
             registra  : in  std_logic;

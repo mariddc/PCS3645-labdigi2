@@ -109,7 +109,7 @@ begin
             digito2 => s_digito2,
             fim     => open,
             pronto  => s_fim_medida,
-            db_tick => s_tick 
+            db_tick => s_tick
         );
  
     REG: registrador_n 

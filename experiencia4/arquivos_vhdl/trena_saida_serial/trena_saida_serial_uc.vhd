@@ -19,13 +19,14 @@ entity trena_saida_serial_uc is
         reset        : in std_logic;
         partida      : in std_logic;
         fim_medida   : in std_logic;
-        dado_enviado : in std_logic;
         char_enviado : in std_logic;
+        dado_enviado : in std_logic;
         -- outputs
         reset_c    : out std_logic;
         transmite  : out std_logic;
         conta_char : out std_logic;
         pronto     : out std_logic;
+        -- debug
         db_estado  : out std_logic_vector(3 downto 0)
     );
 end entity;
@@ -60,11 +61,12 @@ begin
       when medida      =>  if fim_medida='1' then Eprox <= transmissao;
                            else                   Eprox <= medida;
                            end if;
-      when transmissao =>  if dado_enviado='1'    then Eprox <= inicial;
-                           elsif char_enviado='1' then Eprox <= proximo;
-                           else                        Eprox <= transmissao;
+      when transmissao =>  if char_enviado='1' then Eprox <= proximo;
+                           else                     Eprox <= transmissao;
                            end if;
-      when proximo     =>  Eprox <= transmissao;
+      when proximo     =>  if dado_enviado='1' then Eprox <= final;
+                           else                     Eprox <= transmissao;
+                           end if;
       -- implicito: when final => Eprox <= inicial;
       when others      =>  Eprox <= inicial;
 
@@ -80,7 +82,7 @@ begin
       transmite  <= '1' when transmissao, '0' when others;
 
   with Eatual select
-      conta_char <= '1' when proximo, '0' when others;
+      conta_char <= not dado_enviado when proximo, '0' when others;
 
   with Eatual select
       pronto     <= '1' when final, '0' when others;

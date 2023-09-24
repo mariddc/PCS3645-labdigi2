@@ -10,35 +10,39 @@
 -- 
 --------------------------------------------------------------------
 -- Revisoes  :
---     Data        Versao  Autor             Descricao
---     19/09/2021  1.0     Edson Midorikawa  versao inicial
---     12/09/2022  1.1     Edson Midorikawa  revisao
---     15/09/2022  1.2     Edson Midorikawa  adaptacao
---     19/09/2023  1.3     Edson Midorikawa  revisao
+--     Data        Versao  Autores                 Descricao
+--     19/09/2021  1.0     Edson Midorikawa        versao inicial
+--     12/09/2022  1.1     Edson Midorikawa        revisao
+--     15/09/2022  1.2     Edson Midorikawa        adaptacao
+--     19/09/2023  1.3     Edson Midorikawa        revisao
+--     22/09/2023  1.4     Henrique F., Mariana D. adaptacao
 --------------------------------------------------------------------
 --
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity trena_saida_serial_tb is
-end entity;
+entity trena_saida_serial_tb is end;
 
 architecture tb of trena_saida_serial_tb is
   
   -- Componente a ser testado (Device Under Test -- DUT)
   component trena_saida_serial is
     port (
-        clock         : in  std_logic;
-        reset         : in  std_logic;
-        mensurar      : in  std_logic;
-        echo          : in  std_logic;
-        trigger       : out std_logic;
-        saida_serial  : out std_logic;
-        medida0       : out std_logic_vector (6 downto 0);
-        medida1       : out std_logic_vector (6 downto 0);
-        medida2       : out std_logic_vector (6 downto 0);
-        pronto        : out std_logic;
-        db_estado     : out std_logic_vector (6 downto 0)
+        clock           : in  std_logic;
+        reset           : in  std_logic;
+        mensurar        : in  std_logic;
+        echo            : in  std_logic;
+        trigger         : out std_logic;
+        saida_serial    : out std_logic;
+        medida0         : out std_logic_vector(6 downto 0);
+        medida1         : out std_logic_vector(6 downto 0);
+        medida2         : out std_logic_vector(6 downto 0);
+        pronto          : out std_logic;
+        db_mensurar     : out std_logic;
+        db_saida_serial : out std_logic;
+        db_trigger      : out std_logic;
+        db_echo         : out std_logic;
+        db_estado       : out std_logic_vector(6 downto 0)
     );
   end component;
   
@@ -50,11 +54,10 @@ architecture tb of trena_saida_serial_tb is
   signal echo_in          : std_logic := '0';
   signal trigger_out      : std_logic := '0';
   signal saida_serial_out : std_logic := '1';
-  signal medida0_out      : std_logic_vector (6 downto 0) := "0000000";
-  signal medida1_out      : std_logic_vector (6 downto 0) := "0000000";
-  signal medida2_out      : std_logic_vector (6 downto 0) := "0000000";
+  signal medida0_out      : std_logic_vector(6 downto 0) := "0000000";
+  signal medida1_out      : std_logic_vector(6 downto 0) := "0000000";
+  signal medida2_out      : std_logic_vector(6 downto 0) := "0000000";
   signal pronto_out       : std_logic := '0';
-  -- signal db_estado_out : std_logic_vector (3 downto 0)  := "0000";
 
   -- Configurações do clock
   constant clockPeriod   : time      := 20 ns; -- clock de 50MHz
@@ -69,33 +72,37 @@ architecture tb of trena_saida_serial_tb is
   type casos_teste_array is array (natural range <>) of caso_teste_type;
   constant casos_teste : casos_teste_array :=
       (
-        (1, 5882),  -- 5882us (100cm)
-        (2, 4399)   -- 4399us (74,79cm)  arredondar para 75cm
-        -- inserir aqui outros casos de teste (inserir "," na linha anterior)
+        (1, 423),  -- 423us  (7.2cm)
+        (2, 1200), -- 1200us (20.4cm)
+        (3, 2047), -- 2047us (34.8cm)
+        (4, 3412)  -- 3412us (58cm)
       );
 
   signal larguraPulso: time := 1 ns;
+  signal caso : natural;
 
 begin
-  -- Gerador de clock: executa enquanto 'keep_simulating = 1', com o período
-  -- especificado. Quando keep_simulating=0, clock é interrompido, bem como a 
-  -- simulação de eventos
+
   clock_in <= (not clock_in) and keep_simulating after clockPeriod/2;
   
   -- Conecta DUT (Device Under Test)
   dut: trena_saida_serial
        port map( 
-           clock         => clock_in,
-           reset         => reset_in,
-           mensurar      => mensurar_in,
-           echo          => echo_in,
-           trigger       => trigger_out,
-           saida_serial  => saida_serial_out,
-           medida0       => medida0_out,
-           medida1       => medida1_out,
-           medida2       => medida2_out,
-           pronto        => pronto_out,
-           db_estado     => open
+           clock           => clock_in,
+           reset           => reset_in,
+           mensurar        => mensurar_in,
+           echo            => echo_in,
+           trigger         => trigger_out,
+           saida_serial    => saida_serial_out,
+           medida0         => medida0_out,
+           medida1         => medida1_out,
+           medida2         => medida2_out,
+           pronto          => pronto_out,
+           db_estado       => open,
+           db_mensurar     => open,
+           db_saida_serial => open,
+           db_trigger      => open,
+           db_echo         => open
        );
 
   -- geracao dos sinais de entrada (estimulos)
@@ -106,7 +113,7 @@ begin
     keep_simulating <= '1';
     
     ---- valores iniciais ----------------
-    mensurar_in <= '0';
+    mensurar_in <= '1';
     echo_in     <= '0';
 
     ---- inicio: reset ----------------
@@ -121,6 +128,8 @@ begin
 
     ---- loop pelos casos de teste
     for i in casos_teste'range loop
+        caso <= casos_teste(i).id;
+
         -- 1) determina largura do pulso echo
         assert false report "Caso de teste " & integer'image(casos_teste(i).id) & ": " &
             integer'image(casos_teste(i).tempo) & "us" severity note;
@@ -128,12 +137,12 @@ begin
 
         -- 2) envia pulso medir
         wait until falling_edge(clock_in);
-        mensurar_in <= '1';
-        wait for 5*clockPeriod;
         mensurar_in <= '0';
+        wait for 5*clockPeriod;
+        mensurar_in <= '1';
      
-        -- 3) espera por 400us (simula tempo entre trigger e echo)
-        wait for 400 us;
+        -- 3) espaçamento entre echo e trigger
+        wait for 50 us;
      
         -- 4) gera pulso de echo (largura = larguraPulso)
         echo_in <= '1';
