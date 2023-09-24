@@ -25,6 +25,7 @@ entity trena_saida_serial_uc is
         reset_c    : out std_logic;
         transmite  : out std_logic;
         conta_char : out std_logic;
+        medir      : out std_logic;
         pronto     : out std_logic;
         -- debug
         db_estado  : out std_logic_vector(3 downto 0)
@@ -77,6 +78,9 @@ begin
   -- logica de saida (Moore)
   with Eatual select
       reset_c    <= '1' when inicial, '0' when others;
+
+  with Eatual select
+      medir      <= '1' when medida, '0' when others;
 
   with Eatual select
       transmite  <= '1' when transmissao, '0' when others;

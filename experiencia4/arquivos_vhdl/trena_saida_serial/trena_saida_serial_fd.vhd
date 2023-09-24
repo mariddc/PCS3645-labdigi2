@@ -17,6 +17,7 @@ entity trena_saida_serial_fd is
         -- inputs
         clock        : in  std_logic;
         reset        : in  std_logic;
+        reset_c      : in  std_logic;
         echo         : in  std_logic;
         mensurar     : in  std_logic;
         transmitir   : in  std_logic;
@@ -81,12 +82,15 @@ architecture trena_saida_serial_fd_arch of trena_saida_serial_fd is
         );
     end component;
 
+    signal s_reset       : std_logic;
     signal s_char_select : std_logic_vector(1 downto 0);
     signal s_digit       : std_logic_vector(3 downto 0);
     signal s_ascii_char  : std_logic_vector(6 downto 0);
     signal s_medida      : std_logic_vector(11 downto 0);
 
 begin
+
+    s_reset <= reset or reset_c;
 
     U1_INTERFACE: interface_hcsr04
         port map (
@@ -113,7 +117,7 @@ begin
         generic map (M => 4, N => 2)
         port map (
             clock => clock,
-            zera  => reset,
+            zera  => s_reset,
             conta => conta_char,
             Q     => s_char_select,
             fim   => dado_enviado,
@@ -131,18 +135,19 @@ begin
             mux_out => s_digit
         );
 
+    -- ASCII 0 a 9 (0x30 a 0x39)
     U5_ENCODER: with s_digit select
-        s_ascii_char <= "0011110" when "0000",
-                        "0011111" when "0001",
-                        "0100000" when "0010",
-                        "0100001" when "0011",
-                        "0100010" when "0100",
-                        "0100011" when "0101",
-                        "0100100" when "0110",
-                        "0100101" when "0111",
-                        "0100110" when "1000",
-                        "0100111" when "1001",
-                        "0010111" when others; -- ASCII '#' (0x23)
+        s_ascii_char <= "0110000" when "0000",
+                        "0110001" when "0001",
+                        "0110010" when "0010",
+                        "0110011" when "0011",
+                        "0110100" when "0100",
+                        "0110101" when "0101",
+                        "0110110" when "0110",
+                        "0110111" when "0111",
+                        "0111000" when "1000",
+                        "0111001" when "1001",
+                        "0100011" when others; -- ASCII '#' (0x23)
 
     db_medida <= s_medida;
 

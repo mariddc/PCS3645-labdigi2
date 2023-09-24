@@ -43,6 +43,7 @@ architecture structural of trena_saida_serial is
         port (
             clock        : in  std_logic;
             reset        : in  std_logic;
+            reset_c      : in  std_logic;
             echo         : in  std_logic;
             mensurar     : in  std_logic;
             transmitir   : in  std_logic;
@@ -68,7 +69,16 @@ architecture structural of trena_saida_serial is
             transmite  : out std_logic;
             conta_char : out std_logic;
             pronto     : out std_logic;
+            medir      : out std_logic;
             db_estado  : out std_logic_vector(3 downto 0)
+        );
+    end component;
+
+    component edge_detector is
+        port (  
+            clock     : in  std_logic;
+            signal_in : in  std_logic;
+            output    : out std_logic
         );
     end component;
 
@@ -80,7 +90,7 @@ architecture structural of trena_saida_serial is
     end component;
 
     signal s_saida_serial, s_fim_medida, s_dado_enviado, s_char_enviado : std_logic;
-    signal s_not_mensurar, s_reset, s_transmite, s_trigger, s_conta_char : std_logic;
+    signal s_not_mensurar, s_partida, s_medir, s_reset, s_transmite, s_trigger, s_conta_char : std_logic;
 
     signal s_estado : std_logic_vector(3 downto 0);
     signal s_medida : std_logic_vector(11 downto 0);
@@ -93,9 +103,10 @@ begin
         port map (
             -- inputs
             clock        => clock,
-            reset        => s_reset,
+            reset        => reset,
+            reset_c      => s_reset,
             echo         => echo,
-            mensurar     => s_not_mensurar,
+            mensurar     => s_medir,
             transmitir   => s_transmite,
             conta_char   => s_conta_char,
             -- outputs
@@ -113,7 +124,7 @@ begin
             -- inputs
             clock        => clock,
             reset        => reset,
-            partida      => s_not_mensurar,
+            partida      => s_partida,
             fim_medida   => s_fim_medida,
             char_enviado => s_char_enviado,
             dado_enviado => s_dado_enviado,
@@ -122,9 +133,13 @@ begin
             transmite    => s_transmite,
             conta_char   => s_conta_char,
             pronto       => pronto,
+            medir        => s_medir,
             -- debug
             db_estado    => s_estado
         );
+
+    U3_ED: edge_detector
+        port map (clock => clock, signal_in => s_not_mensurar, output => s_partida);
 
     HEX0: hexa7seg
         port map (hexa => s_medida(3 downto 0), sseg => medida0);
