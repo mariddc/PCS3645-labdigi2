@@ -19,6 +19,7 @@ entity trena_saida_serial is
         -- inputs
         clock        : in  std_logic;
         reset        : in  std_logic;
+        modo         : in  std_logic;
         mensurar     : in  std_logic;
         echo         : in  std_logic;
         -- outputs
@@ -49,6 +50,7 @@ architecture structural of trena_saida_serial is
             transmitir   : in  std_logic;
             conta_char   : in  std_logic;
             trigger      : out std_logic;
+            fim_espera   : out std_logic;
             fim_medida   : out std_logic;
             char_enviado : out std_logic;
             dado_enviado : out std_logic;
@@ -61,7 +63,9 @@ architecture structural of trena_saida_serial is
         port (
             clock        : in std_logic;
             reset        : in std_logic;
+            modo         : in std_logic;
             partida      : in std_logic;
+            fim_espera   : in std_logic;
             fim_medida   : in std_logic;
             char_enviado : in std_logic;
             dado_enviado : in std_logic;
@@ -89,7 +93,7 @@ architecture structural of trena_saida_serial is
         );
     end component;
 
-    signal s_saida_serial, s_fim_medida, s_dado_enviado, s_char_enviado : std_logic;
+    signal s_saida_serial, s_fim_espera, s_fim_medida, s_dado_enviado, s_char_enviado : std_logic;
     signal s_not_mensurar, s_partida, s_medir, s_reset, s_transmite, s_trigger, s_conta_char : std_logic;
 
     signal s_estado : std_logic_vector(3 downto 0);
@@ -111,6 +115,7 @@ begin
             conta_char   => s_conta_char,
             -- outputs
             trigger      => s_trigger,
+            fim_espera   => s_fim_espera,
             fim_medida   => s_fim_medida,
             char_enviado => s_char_enviado,
             dado_enviado => s_dado_enviado,
@@ -124,7 +129,9 @@ begin
             -- inputs
             clock        => clock,
             reset        => reset,
+            modo         => modo,
             partida      => s_partida,
+            fim_espera   => s_fim_espera,
             fim_medida   => s_fim_medida,
             char_enviado => s_char_enviado,
             dado_enviado => s_dado_enviado,

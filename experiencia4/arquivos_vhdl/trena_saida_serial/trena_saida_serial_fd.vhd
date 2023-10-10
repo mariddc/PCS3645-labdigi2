@@ -24,6 +24,7 @@ entity trena_saida_serial_fd is
         conta_char   : in  std_logic;
         -- outputs
         trigger      : out std_logic;
+        fim_espera   : out std_logic;
         fim_medida   : out std_logic;
         char_enviado : out std_logic;
         dado_enviado : out std_logic;
@@ -83,6 +84,8 @@ architecture trena_saida_serial_fd_arch of trena_saida_serial_fd is
     end component;
 
     signal s_reset       : std_logic;
+    signal s_reset_c     : std_logic;
+    signal s_zera_espera : std_logic;
     signal s_char_select : std_logic_vector(1 downto 0);
     signal s_digit       : std_logic_vector(3 downto 0);
     signal s_ascii_char  : std_logic_vector(6 downto 0);
@@ -90,7 +93,9 @@ architecture trena_saida_serial_fd_arch of trena_saida_serial_fd is
 
 begin
 
-    s_reset <= reset or reset_c;
+    s_reset       <= reset or reset_c;
+    s_reset_c     <= reset_c;
+    s_zera_espera <= not reset_c;
 
     U1_INTERFACE: interface_hcsr04
         port map (
@@ -134,6 +139,17 @@ begin
             sel     => s_char_select,
             mux_out => s_digit
         );
+    
+    ESPERA_COUNT: contador_m
+        generic map (M => 100000000, N => 27)
+            port map (
+                clock => clock,
+                zera  => s_zera_espera,
+                conta => s_reset_c, --estado inicial 
+                Q     => open,
+                fim   => fim_espera,
+                meio  => open
+            );
 
     s_ascii_char <= "011" & s_digit when s_digit <= "1001" else "0100011";
 
