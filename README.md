@@ -24,3 +24,9 @@ HC-SR04. A implementação e testes serão desenvolvidas para a placa de desenvo
 Esta experiência tem por objetivo desenvolver uma Trena Digital, ou seja, um circuito digital que realiza a medida de 
 distância para um objeto, usando um sensor ultrassônico de distância HC-SR04, com saída das medidas em uma porta de 
 comunicação serial. 
+
+-----
+### Experiência 5: Sistema de Sonar
+O objetivo desta experiência é niciar o desenvolvimento de um circuito que realiza a varredura e a detecção de objetos 
+próximos com a utilização de um sensor ultrassônico de distância e de um servomotor, com saída serial para um dispositivo 
+de apresentação. 
