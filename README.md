@@ -27,6 +27,6 @@ comunicação serial.
 
 -----
 ### Experiência 5: Sistema de Sonar
-O objetivo desta experiência é niciar o desenvolvimento de um circuito que realiza a varredura e a detecção de objetos 
+O objetivo desta experiência é iniciar o desenvolvimento de um circuito que realiza a varredura e a detecção de objetos 
 próximos com a utilização de um sensor ultrassônico de distância e de um servomotor, com saída serial para um dispositivo 
 de apresentação. 
