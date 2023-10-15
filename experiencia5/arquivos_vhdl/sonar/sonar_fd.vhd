@@ -170,7 +170,7 @@ begin
         );
 
     TIMER: contador_m
-        generic map (M => 100, N => 27)
+        generic map (M => 10000, N => 27)   -- 10000 / 100000000 (200us / 2s)
         port map (
             clock => clock,
             zera  => s_not_conta,

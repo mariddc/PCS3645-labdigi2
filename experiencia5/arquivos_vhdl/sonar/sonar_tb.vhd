@@ -147,9 +147,6 @@ begin
     wait for 20 us;
     ligar_in <= '1';
 
-    ---- espera de 20us
-    wait for 20 us;
-
     ---- loop pelas posicoes de teste
     for i in posicoes_teste'range loop
         caso <= posicoes_teste(i).id;
