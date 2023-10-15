@@ -84,7 +84,6 @@ architecture fd_arch of interface_hcsr04_fd is
     signal s_distancia_in : std_logic_vector(11 downto 0);
     signal s_digito0, s_digito1, s_digito2 : std_logic_vector(3 downto 0);
 
-
     -- saidas
     signal s_fim_medida, s_trigger : std_logic;
     signal s_distancia_out : std_logic_vector(11 downto 0);

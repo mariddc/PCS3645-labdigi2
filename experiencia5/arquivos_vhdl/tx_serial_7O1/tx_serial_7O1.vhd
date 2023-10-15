@@ -81,7 +81,8 @@ architecture tx_serial_7O1_arch of tx_serial_7O1 is
     end component;
 
     signal s_zera, s_conta, s_carrega : std_logic;
-    signal s_desloca, s_tick, s_fim, s_saida_serial, s_estado : std_logic;
+    signal s_desloca, s_tick, s_fim, s_saida_serial : std_logic;
+    signal s_estado : std_logic_vector(3 downto 0);
 
 begin
 
@@ -98,7 +99,7 @@ begin
                carrega   => s_carrega, 
                desloca   => s_desloca, 
                pronto    => pronto,
-               db_estado => s_estado,
+               db_estado => s_estado
            );
 
     -- fluxo de dados

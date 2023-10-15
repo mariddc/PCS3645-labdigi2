@@ -17,9 +17,7 @@ entity trena_saida_serial_uc is
         -- inputs
         clock        : in std_logic;
         reset        : in std_logic;
-        modo         : in std_logic;
         partida      : in std_logic;
-        fim_espera   : in std_logic;
         fim_medida   : in std_logic;
         char_enviado : in std_logic;
         dado_enviado : in std_logic;
@@ -58,8 +56,7 @@ begin
 
     case Eatual is
 
-      when inicial     =>  if (partida='1' and modo='0') or
-                              (fim_espera='1' and modo='1') then Eprox <= medida; 
+      when inicial     =>  if partida='1' then Eprox <= medida; 
                            else                Eprox <= inicial;
                            end if;
       when medida      =>  if fim_medida='1' then Eprox <= transmissao;

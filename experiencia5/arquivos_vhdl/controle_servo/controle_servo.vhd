@@ -23,7 +23,6 @@ entity controle_servo is
       reset      : in  std_logic;
       posicao    : in  std_logic_vector(2 downto 0);
       pwm        : out std_logic;
-      db_reset   : out std_logic;
       db_pwm     : out std_logic;
       db_posicao : out std_logic_vector(2 downto 0)
   );
@@ -84,7 +83,6 @@ begin
   pwm <= s_pwm;
 
   -- debug
-  db_reset   <= reset;
   db_pwm     <= s_pwm;
   db_posicao <= posicao;
 
