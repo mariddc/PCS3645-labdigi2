@@ -16,6 +16,7 @@ entity sonar is
         medida1      : out std_logic_vector(6 downto 0);
         medida2      : out std_logic_vector(6 downto 0);
         posicao      : out std_logic_vector(6 downto 0);
+        -- debug
         db_estado       : out std_logic_vector(6 downto 0);
         -- LEDs e Analog Discovery CH
         db_reset        : out std_logic;
@@ -103,7 +104,8 @@ architecture rtl of sonar is
     signal s_posicao : std_logic_vector(2 downto 0);
     signal s_posicao_ext : std_logic_vector(3 downto 0);
     
-    signal s_estado, s_estado_trena, s_estado_interface, s_estado_tx : std_logic_vector(3 downto 0);
+    signal s_estado, s_estado_sel, s_estado_trena : std_logic_vector(3 downto 0);
+    signal s_estado_interface, s_estado_tx : std_logic_vector(3 downto 0);
     signal s_medida : std_logic_vector(11 downto 0);
 
 begin
@@ -165,7 +167,7 @@ begin
             d2 => s_estado_interface,
             d3 => s_estado_tx,
             sel => db_key,
-            mux_out => s_estado
+            mux_out => s_estado_sel
         );
 
     HEX0: hexa7seg
@@ -181,7 +183,7 @@ begin
         port map (hexa => s_posicao_ext, sseg => posicao);
 
     HEX5: hexa7seg
-        port map (hexa => s_estado, sseg => db_estado);
+        port map (hexa => s_estado_sel, sseg => db_estado);
 
     fim_posicao <= s_pronto;
 
