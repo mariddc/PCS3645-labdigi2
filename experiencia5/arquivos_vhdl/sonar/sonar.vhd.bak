@@ -107,7 +107,7 @@ architecture rtl of exp5_desafio is
     end component;
 
     signal s_zera, s_medir, s_conta, s_avanca, s_pronto, s_fim_timer : std_logic;
-    signal s_modo : std_logic_vector(1 downto 0);
+    signal s_modo : std_logic_vector(1 donwto 0);
 
     signal s_posicao : std_logic_vector(2 downto 0);
     signal s_posicao_ext : std_logic_vector(3 downto 0);
@@ -198,7 +198,7 @@ begin
 
     fim_posicao <= s_pronto;
 
-    db_modo  <= s_modo(0);
+    db_modo  <= s_modo,
     db_reset <= reset;
 
 end architecture;

@@ -87,6 +87,7 @@ architecture structural of trena_saida_serial is
     signal s_saida_serial, s_fim_medida, s_dado_enviado, s_char_enviado : std_logic;
     signal s_not_mensurar, s_medir, s_reset, s_transmite, s_trigger, s_conta_char : std_logic;
 
+    signal s_estado : std_logic_vector(3 downto 0);
     signal s_medida : std_logic_vector(11 downto 0);
 
 begin
@@ -131,7 +132,7 @@ begin
             pronto       => pronto,
             medir        => s_medir,
             -- debug
-            db_estado    => db_estado
+            db_estado    => s_estado
         );
 
     saida_serial <= s_saida_serial;

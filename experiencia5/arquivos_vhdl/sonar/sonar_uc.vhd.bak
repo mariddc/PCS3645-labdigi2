@@ -43,11 +43,13 @@ begin
         when idle           =>  if ligar='1' then Eprox <= inicial;
                                 else              Eprox <= idle;
                                 end if;
-        when inicial        =>  Eprox <= avaliacao;
-        when avaliacao      =>  if modo="01" then Eprox <= interrompido;
-                                else              Eprox <= espera;
+        when inicial        =>  Eprox <= espera;
+        when avaliacao      =>  if modo="00" then Eprox <= espera;
+                                else              Eprox <= interrompido;
                                 end if;
-        when interrompido   =>  Eprox <= avaliacao;
+        when interrompido   =>  if modo="00" then Eprox <= espera;
+                                else             Eprox <= interrompido;
+                                end if;
         when espera         =>  if fim_timer='1' then Eprox <= medida;
                                 else                  Eprox <= espera;
                                 end if;
@@ -55,7 +57,7 @@ begin
         when transmissao    =>  if transmitido='1' then Eprox <= posicionamento;
                                 else                    Eprox <= transmissao;
                                 end if;
-        when posicionamento =>  Eprox <= avaliacao;
+        when posicionamento =>  Eprox <= espera;
         when others         =>  Eprox <= inicial;
       end case;
     end process;
