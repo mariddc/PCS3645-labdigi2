@@ -24,6 +24,9 @@ output_files/
 
 work/
 
+# Quartus
+*.bak
+
 # generic
 transcript
 *.txt
