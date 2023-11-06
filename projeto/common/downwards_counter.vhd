@@ -21,7 +21,7 @@ begin
 process(clock, clear, enable, IQ)
     begin
         if (clear = '1') then IQ <= 0;
-        elsif (clock'event and clock='1') then
+        elsif (rising_edge(clock)) then
             if (count='1') then
                 if (IQ /= 0) then IQ <= IQ - 1;
                 end if;

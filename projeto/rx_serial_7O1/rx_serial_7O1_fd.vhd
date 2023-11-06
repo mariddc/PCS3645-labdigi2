@@ -136,7 +136,7 @@ begin
       if (reset_r='1') then
         s_paridade <= '0';
         s_deserializado <= (others => '0');
-      elsif (rising_edge(clock) and pronto='1') then
+      elsif (pronto='1') then
         s_paridade <= s_dado(7);
         s_deserializado <= s_dado(6 downto 0);
       end if;

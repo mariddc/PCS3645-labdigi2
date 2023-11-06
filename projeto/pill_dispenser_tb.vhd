@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use work.pill_package.CONTAINERS;
 
 entity pill_dispenser_tb is
 end entity;
@@ -13,7 +14,7 @@ architecture tb of pill_dispenser_tb is
             db_switch : in  std_logic_vector(1 downto 0);
             echo      : in  std_logic;
             serial    : in  std_logic;
-            pwm       : out std_logic;
+            pwm       : out std_logic_vector(CONTAINERS-1 downto 0);
             trigger   : out std_logic;
             alert     : out std_logic;
             -- debug
@@ -31,7 +32,7 @@ architecture tb of pill_dispenser_tb is
     signal db_switch_in     : std_logic_vector(1 downto 0) := "00";
     signal echo_in          : std_logic := '0';
     signal serial_in        : std_logic := '1';
-    signal pwm_out          : std_logic := '0';
+    signal pwm_out          : std_logic_vector(CONTAINERS-1 downto 0) := (others => '0');
     signal trigger_out      : std_logic := '0';
     signal alert_out        : std_logic := '0';
 
@@ -127,7 +128,7 @@ begin
 
         UART_WRITE_BYTE (data_in => serial_test(i).char, serial_out => serial_in);
         serial_in <= '1';
-        wait for 10 us;
+        wait for 100 ms;
     end loop;
 
     -- tests termination

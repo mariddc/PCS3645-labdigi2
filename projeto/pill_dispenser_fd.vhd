@@ -31,12 +31,12 @@ architecture df_arch of pill_dispenser_fd is
 
     constant pwm_period : natural := 1_000_000;
 
-    -- 2 seconds timer [100_000_000 / 12] (real/simu)
-    constant check_timeout       : natural := 100_000_000;
+    -- 2 seconds timer [100_000_000 / 1_000_000] (real/simu)
+    constant check_timeout       : natural := 1_000_000;
     constant check_timeout_bits  : natural := natural(ceil(log2(real(check_timeout))));
     
-    -- 500 milliseconds delay [25_000_000 / 4] (real/simu)
-    constant safety_timeout      : natural := 25_000_000;
+    -- 500 milliseconds delay [25_000_000 / 250_000] (real/simu)
+    constant safety_timeout      : natural := 250_000;
     constant safety_timeout_bits : natural := natural(ceil(log2(real(safety_timeout))));
 
     -- dosage and containers
@@ -45,8 +45,8 @@ architecture df_arch of pill_dispenser_fd is
     signal pill_containers   : pill_count;
 
     -- auxiliary signals
-    signal s_pwm, s_count_reset : std_logic;
-    signal width                : std_logic_vector(1 downto 0);
+    signal s_pwm, s_count_reset, s_rx_received : std_logic;
+    signal width : std_logic_vector(1 downto 0);
 
 begin
 
@@ -76,7 +76,7 @@ begin
             dado_serial       => serial,
             dado_recebido     => s_dosage,
             paridade_recebida => open,
-            pronto            => open,
+            pronto            => s_rx_received,
             db_dado_serial    => open,
             db_estado         => rx_state
         );
@@ -121,7 +121,7 @@ begin
     -- 4 bits to identify the container (6 downto 3) and
     -- the 3 least significant bits to indicate the proper dosage of the container (2 downto 0)
     CONTAINERS: for i in pill_containers'range generate
-        containers_enable(i) <= '1' when i = to_integer(unsigned(s_dosage(6 downto 3))) else '0';
+        containers_enable(i) <= '1' when i = to_integer(unsigned(s_dosage(6 downto 3))) and s_rx_received='1' else '0';
         pwm(i) <= '0' when pill_containers(i) = "000" else s_pwm;
 
         PILL_COUNT: downwards_counter
@@ -129,7 +129,7 @@ begin
             port map (
                 clock  => clock,
                 clear  => reset,
-                count  => discount,   
+                count  => discount,  
                 enable => containers_enable(i),
                 D      => s_dosage(2 downto 0),
                 Q      => pill_containers(i)
