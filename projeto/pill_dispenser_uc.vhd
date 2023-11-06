@@ -36,22 +36,22 @@ begin
     process (current_state, detected, check_timeout, safety_timeout)
     begin
       case current_state is
-        when idle           =>  if detected='1' then next_state <= check;
-                                else                 next_state <= idle;
-                                end if;
-        when check          =>  if detected='0'         then next_state <= idle;
-                                elsif check_timeout='1' then next_state <= dispense;
-                                else                         next_state <= check;
-                                end if;
-        when dispense       =>  if safety_timeout='1' then next_state <= countdown;
-                                else                       next_state <= dispense;
-                                end if;
-        when countdown      =>  next_state <= await;
-        when await          =>  if detected='0'          then next_state <= idle;
-                                elsif safety_timeout='1' then next_state <= dispense;
-                                else                          next_state <= await;
-                                end if;
-        when others         =>  next_state <= idle;
+        when idle      =>  if detected='1' then next_state <= check;
+                           else                 next_state <= idle;
+                           end if;
+        when check     =>  if detected='0'         then next_state <= idle;
+                           elsif check_timeout='1' then next_state <= dispense;
+                           else                         next_state <= check;
+                           end if;
+        when dispense  =>  if detected='0'          then next_state <= idle;
+                           elsif safety_timeout='1' then next_state <= await;
+                           else                          next_state <= dispense;
+                           end if;
+        when await     =>  if safety_timeout='1' then next_state <= countdown;
+                           else                       next_state <= await;
+                           end if;
+        when countdown =>  next_state <= dispense;
+        when others    =>  next_state <= idle;
       end case;
     end process;
 
