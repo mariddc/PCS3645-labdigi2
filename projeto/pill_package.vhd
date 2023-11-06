@@ -19,6 +19,32 @@ package pill_package is
         );
     end component downwards_counter;
 
+    component circuito_pwm is
+        generic (
+            conf_periodo           : integer; 
+            largura_00, largura_01 : integer;
+            largura_10, largura_11 : integer
+        );
+        port (
+            clock   : in  std_logic;
+            reset   : in  std_logic;
+            largura : in  std_logic_vector(1 downto 0);  
+            pwm     : out std_logic 
+        );
+      end component circuito_pwm;
+
+    component contador_m is
+        generic (constant M, N : integer);
+        port (
+            clock : in  std_logic;
+            zera  : in  std_logic;
+            conta : in  std_logic;
+            Q     : out std_logic_vector(N-1 downto 0);
+            fim   : out std_logic;
+            meio  : out std_logic
+        );
+    end component contador_m;
+
     component interface_hcsr04 is
         port (
             clock     : in  std_logic;
