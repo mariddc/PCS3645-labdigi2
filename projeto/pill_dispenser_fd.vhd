@@ -32,11 +32,11 @@ architecture df_arch of pill_dispenser_fd is
     constant pwm_period : natural := 1_000_000;
 
     -- 2 seconds timer [100_000_000 / 1_000_000] (real/simu)
-    constant check_timeout       : natural := 1_000_000;
+    constant check_timeout       : natural := 100_000_000;
     constant check_timeout_bits  : natural := natural(ceil(log2(real(check_timeout))));
     
     -- 500 milliseconds delay [25_000_000 / 250_000] (real/simu)
-    constant safety_timeout      : natural := 250_000;
+    constant safety_timeout      : natural := 25_000_000;
     constant safety_timeout_bits : natural := natural(ceil(log2(real(safety_timeout))));
 
     -- dosage and containers
